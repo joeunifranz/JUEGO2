@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego de Cultura General</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+        .quiz-container {
+            margin: auto;
+            width: 50%;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .question {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+        .options button {
+            margin: 10px 0;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .options button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 20px;
+        }
+        .correct {
+            background-color: green;
+        }
+        .wrong {
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <h1>Juego de Cultura General</h1>
+    <div class="quiz">
+        <div class="question" id="question"></div>
+        <div class="options" id="options"></div>
+        <button class="btn" id="nextBtn" style="display:none;">Siguiente</button>
+        <div class="result" id="result" style="display:none;"></div>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        {
+            question: "¿Cuál es la capital de Francia?",
+            options: ["Berlín", "Madrid", "París", "Lisboa"],
+            answer: "París"
+        },
+        {
+            question: "¿Quién escribió 'Cien años de soledad'?",
+            options: ["Gabriel García Márquez", "Julio Cortázar", "Pablo Neruda", "Mario Vargas Llosa"],
+            answer: "Gabriel García Márquez"
+        },
+        {
+            question: "¿Qué planeta es conocido como el planeta rojo?",
+            options: ["Júpiter", "Marte", "Saturno", "Venus"],
+            answer: "Marte"
+        },
+        {
+            question: "¿Cuál es el océano más grande del mundo?",
+            options: ["Atlántico", "Índico", "Ártico", "Pacífico"],
+            answer: "Pacífico"
+        },
+        {
+            question: "¿En qué año llegó el hombre a la Luna?",
+            options: ["1965", "1969", "1971", "1980"],
+            answer: "1969"
+        }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    function loadQuestion() {
+        const questionEl = document.getElementById('question');
+        const optionsEl = document.getElementById('options');
+        const nextBtn = document.getElementById('nextBtn');
+        const resultEl = document.getElementById('result');
+
+        if (currentQuestion < questions.length) {
+            const currentQ = questions[currentQuestion];
+            questionEl.innerText = currentQ.question;
+            optionsEl.innerHTML = '';
+            currentQ.options.forEach(option => {
+                const button = document.createElement('button');
+                button.innerText = option;
+                button.onclick = () => selectOption(option);
+                optionsEl.appendChild(button);
+            });
+            nextBtn.style.display = 'none';
+            resultEl.style.display = 'none';
+        } else {
+            questionEl.innerText = 'Juego terminado';
+            optionsEl.innerHTML = '';
+            resultEl.innerText = `Tu puntuación es: ${score} de ${questions.length}`;
+            resultEl.style.display = 'block';
+        }
+    }
+
+    function selectOption(selectedOption) {
+        const currentQ = questions[currentQuestion];
+        const buttons = document.querySelectorAll('.options button');
+
+        buttons.forEach(button => {
+            button.disabled = true; // Deshabilitar todos los botones
+            if (button.innerText === currentQ.answer) {
+                button.classList.add('correct'); // Respuesta correcta
+            } else if (button.innerText === selectedOption) {
+                button.classList.add('wrong'); // Respuesta incorrecta
+            }
+        });
+
+        if (selectedOption === currentQ.answer) {
+            score++;
+        }
+
+        document.getElementById('nextBtn').style.display = 'block';
+    }
+
+    document.getElementById('nextBtn').onclick = () => {
+        currentQuestion++;
+        loadQuestion();
+    };
+
+    loadQuestion();
+</script>
+
+</body>
+</html>
